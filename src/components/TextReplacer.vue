@@ -2,7 +2,7 @@
   <main>
     <section class="field mt-3">
       <label
-        class="label"
+        class="label is-unselectable"
         for="input"
       >
         Enter encrypted text:
@@ -16,7 +16,7 @@
         />
       </div>
     </section>
-    <b>Replacements:</b>
+    <b class="is-unselectable">Replacements:</b>
     <br>
     <section class="is-flex is-flex-direction-row is-flex-wrap-wrap my-3">
       <div
@@ -27,7 +27,7 @@
         <div class="card-content">
           <div class="field">
             <label
-              class="label"
+              class="label is-unselectable"
               :for="`old-char-${idx}`"
             >
               Character in original text:
@@ -36,6 +36,7 @@
               <input
                 type="text"
                 size="3"
+                maxlength="1"
                 v-model="repl.old"
                 :id="`old-char-${idx}`"
               >
@@ -43,7 +44,7 @@
           </div>
           <div class="field">
             <label
-              class="label"
+              class="label is-unselectable"
               :for="`new-char-${idx}`"
             >
               Character as replacement:
@@ -52,13 +53,14 @@
               <input
                 type="text"
                 size="3"
+                maxlength="1"
                 v-model="repl.new"
                 :id="`new-char-${idx}`"
               >
             </div>
           </div>
           <button
-            class="button is-danger is-small"
+            class="button is-danger is-small is-unselectable"
             @click="deleteReplacement(idx)"
           >
             Delete this
@@ -66,17 +68,29 @@
         </div>
       </div>
     </section>
+    <label class="checkbox is-block">
+      <input
+        type="checkbox"
+        v-model="autoLowerUpperCase"
+      >
+      Auto-transform lower-case and upper-case
+    </label>
     <button
-      class="button is-primary my-2"
+      class="button is-primary my-2 is-unselectable"
       type="button"
       @click="addReplacement"
     >
       Add replacement
     </button>
     <section>
-      <b>Result: </b>
+      <b class="my-3 is-inline-block is-unselectable">Result: </b>
       <br>
-      {{ result }}
+      <textarea
+        class="textarea has-cursor-text"
+        disabled
+        rows="8"
+        v-model="result"
+      />
     </section>
   </main>
 </template>
@@ -87,7 +101,8 @@ export default {
   data () {
     return {
       input: '',
-      replacements: []
+      replacements: [],
+      autoLowerUpperCase: false
     }
   },
   methods: {
@@ -105,7 +120,30 @@ export default {
     result () {
       const inputArray = this.input.split('')
       const resultArray = new Array(inputArray.length).fill(0)
-      this.replacements.forEach(repl => {
+      const replacers = [...this.replacements]
+      if (this.autoLowerUpperCase) {
+        replacers.forEach(repl => {
+          if (!replacers.includes({
+            old: repl.old.toLowerCase(),
+            new: repl.new.toLowerCase()
+          })) {
+            replacers.push({
+              old: repl.old.toLowerCase(),
+              new: repl.new.toLowerCase()
+            })
+          }
+          if (!replacers.includes({
+            old: repl.old.toUpperCase(),
+            new: repl.new.toUpperCase()
+          })) {
+            replacers.push({
+              old: repl.old.toUpperCase(),
+              new: repl.new.toUpperCase()
+            })
+          }
+        })
+      }
+      replacers.forEach(repl => {
         const places = inputArray.reduce((acc, value, index) => {
           if (value === repl.old) {
             acc.push(index)
@@ -116,7 +154,6 @@ export default {
           resultArray[place] = repl.new
         })
       })
-      console.debug(resultArray)
       return resultArray.map((value, index) => {
         if (value === 0) {
           return inputArray[index]
@@ -128,6 +165,9 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+.has-cursor-text {
+  cursor: text !important;
+  pointer-events: all;
+}
 </style>
