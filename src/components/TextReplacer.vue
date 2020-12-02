@@ -73,7 +73,7 @@
         type="checkbox"
         v-model="autoLowerUpperCase"
       >
-      Auto-transform lower-case and upper-case
+      Ignore case (be case-insensitive)
     </label>
     <button
       class="button is-info my-2 mr-2 is-unselectable"
