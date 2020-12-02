@@ -5,7 +5,7 @@
         class="label is-unselectable"
         for="input"
       >
-        Enter encrypted text:
+        Enter text to modify:
       </label>
       <div class="control">
         <textarea
@@ -176,25 +176,16 @@ export default {
       const resultArray = new Array(inputArray.length).fill(0)
       const replacers = [...this.replacements]
       if (this.autoLowerUpperCase) {
-        replacers.forEach(repl => {
-          if (!replacers.includes({
+        replacers.forEach((repl, index) => {
+          replacers.splice(index, 1)
+          replacers.push({
             old: repl.old.toLowerCase(),
             new: repl.new.toLowerCase()
-          })) {
-            replacers.push({
-              old: repl.old.toLowerCase(),
-              new: repl.new.toLowerCase()
-            })
-          }
-          if (!replacers.includes({
+          })
+          replacers.push({
             old: repl.old.toUpperCase(),
             new: repl.new.toUpperCase()
-          })) {
-            replacers.push({
-              old: repl.old.toUpperCase(),
-              new: repl.new.toUpperCase()
-            })
-          }
+          })
         })
       }
       replacers.forEach(repl => {
