@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="mx-1">
     <section class="field mt-3">
       <label
         class="label is-unselectable"
