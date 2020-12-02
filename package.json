@@ -48,6 +48,25 @@
       "ecmaVersion": 2020
     }
   },
+  "license": "MIT",
+  "author": {
+    "email": "github@erik.michelson.eu",
+    "name": "Erik Michelson"
+  },
+  "bugs": {
+    "url": "https://github.com/ErikMichelson/text-replacer/issues/new"
+  },
+  "description": "Simple web-app to substitute characters in texts with other ones.",
+  "homepage": "https://erikmichelson.github.io/text-replacer/",
+  "keywords": [
+    "text",
+    "replace",
+    "characters"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ErikMichelson/text-replacer.git"
+  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
