@@ -76,12 +76,32 @@
       Auto-transform lower-case and upper-case
     </label>
     <button
-      class="button is-primary my-2 is-unselectable"
+      class="button is-info my-2 mr-2 is-unselectable"
       type="button"
       @click="addReplacement"
     >
       Add replacement
     </button>
+    <button
+      class="button my-2 mr-2 is-unselectable"
+      type="button"
+      @click="downloadReplMap"
+    >
+      Download replacement map
+    </button>
+    <button
+      class="button my-2 mr-2 is-unselectable"
+      type="button"
+      @click="uploadReplMap"
+    >
+      Upload replacement map
+    </button>
+    <input
+      type="file"
+      class="is-hidden"
+      ref="filechooser"
+      @change="handleReplImport"
+    >
     <section>
       <b class="my-3 is-inline-block is-unselectable">Result: </b>
       <br>
@@ -114,6 +134,40 @@ export default {
     },
     deleteReplacement (index) {
       this.replacements.splice(index, 1)
+    },
+    downloadReplMap () {
+      const elem = document.createElement('a')
+      const dataBlob = new Blob([JSON.stringify(this.replacements)], {
+        type: 'application/json'
+      })
+      elem.download = 'replacements.json'
+      elem.style.display = 'none'
+      elem.href = URL.createObjectURL(dataBlob)
+      document.body.appendChild(elem)
+      elem.click()
+      setTimeout(() => elem.remove(), 1000)
+    },
+    uploadReplMap () {
+      this.$refs.filechooser.click()
+    },
+    handleReplImport () {
+      const files = this.$refs.filechooser.files
+      if (!files || files.length < 1) {
+        return
+      }
+      const file = files[0]
+      const fileReader = new FileReader()
+      fileReader.addEventListener('load', () => {
+        const json = fileReader.result
+        this.replacements = JSON.parse(json)
+      })
+      fileReader.addEventListener('loadend', () => {
+        this.$refs.filechooser.value = ''
+      })
+      fileReader.addEventListener('error', (error) => {
+        console.error(error)
+      })
+      fileReader.readAsText(file)
     }
   },
   computed: {
