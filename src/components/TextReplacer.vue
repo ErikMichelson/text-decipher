@@ -68,8 +68,12 @@
         </div>
       </div>
     </section>
-    <label class="checkbox is-block">
+    <label
+      class="checkbox is-block"
+      for="ignore-case"
+    >
       <input
+        id="ignore-case"
         type="checkbox"
         v-model="autoLowerUpperCase"
       >
